@@ -5,6 +5,8 @@ fork from [rizal72/Cozmo-Voice-Commands](https://github.com/rizal72/Cozmo-Voice-
 *  Add a new command to [Cozmo-Voice-Commands](https://github.com/rizal72/Cozmo-Voice-Commands): `Cozmo, what is this`, then cozmo will tell you what it saw
 *  Add new language: Chinese
 
+![](http://oav6fgfj1.bkt.clouddn.com/cozmodc8e1dad.png)
+
 ```
 - Cozmo, what is this 
 - I'm thinking! Oh, it is the coffee mug.

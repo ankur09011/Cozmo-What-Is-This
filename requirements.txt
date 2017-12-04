@@ -5,3 +5,4 @@ SpeechRecognition
 PyAudio
 Pynput
 Pillow==4.3.0
+jieba==0.39

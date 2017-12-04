@@ -15,6 +15,7 @@ import json
 
 import cozmo
 
+
 try:
     from termcolor import colored, cprint
     from pynput.keyboard import Key, Listener
@@ -32,7 +33,7 @@ log = False
 wait_for_shift = True
 lang = None
 lang_data = None
-commands_activate = ["cozmo", "robot", "cosmo", "cosimo", "cosma", "cosima", "kosmos", "cosmos", "cosmic", "osmo", "kosovo", "peau", "kosmo", "kozmo", "gizmo"]
+commands_activate = ["cozmo", "robot", "cosmo", "cosimo", "cosma", "cosima", "kosmos", "cosmos", "cosmic", "osmo", "kosovo", "peau", "kosmo", "kozmo", "gizmo", "瓦力", "小不点"]
 vc = None
 languages = []
 
@@ -217,10 +218,21 @@ def listen(robot: cozmo.robot.Robot):
             print("You said: " + recognized)
 
             '''Check if one of the activation commands is in the recognized string'''
-            found_command = set(commands_activate).intersection(recognized.split())
+            if lang_data['lang_ext'] == "zh-CN":
+                # if chinese
+                # print("language:",lang_data['lang_ext'])
+                # for chinese
+                import jieba
+                seg_list = list(jieba.cut(recognized, cut_all=True))
+                found_command = set(commands_activate).intersection(seg_list)
+            else:
+                found_command = set(commands_activate).intersection(recognized.split())
+
             if found_command:
+                print("found_command:",found_command)
                 cprint("Action command recognized: " + str(found_command), "green")
                 cmd_funcs, cmd_args = extract_commands_from_string(recognized) #check if a corresponding command exists
+                print((robot, cmd_funcs, cmd_args))
                 executeCommands(robot, cmd_funcs, cmd_args)
             else:
                 cprint("You did not say the magic words: " + commands_activate[0] + ", " + commands_activate[1], "red")
@@ -312,9 +324,14 @@ def get_command(command_name): #iterates json and returns the command and its in
 
     #splitted = func_name[len(prefix_str):-1] #get only the right part minus the last letter
     for i,command in enumerate(commands):
+        # print("i:",i)
         #cycle through all the words in the commands list and look for one that is contained in the command as a substring!
         for word in command['words']:
-            wordcut = word[0:-1] #getting the word minus the last letter for conjugations
+            if lang_data['lang_ext'] == "zh-CN":
+                wordcut = word
+            else:
+                wordcut = word[0:-1] #getting the word minus the last letter for conjugations
+            # print("word:",word,"wordcut:",wordcut,"command['words']:",command['words'],"command_name.lower():",command_name.lower())
             if wordcut in command_name.lower(): #checking if the word is contained in the command (driv in drive)
                 func_name = commands[i]['action'] #getting the action that corresponds to the spoken command
                 if log:
@@ -331,7 +348,15 @@ def extract_commands_from_string(in_string):
     if log:
         print("splitted sentences: ", sentences)
     for sentence in sentences:
-        words = sentence.split()
+        if lang_data['lang_ext'] == "zh-CN":
+            import jieba
+            seg_list = list(jieba.cut(sentence, cut_all=True))
+            words = seg_list
+        else:
+            words = sentence.split()
+        # print("extract_commands_from_string words:",words ) # extract_commands_from_string words: ['小不点', '不点', '这', '是', '什么']
+
+        # words = sentence.split()
         for i in range(len(words)):
             cmd_func, cmd_index = get_command(words[i])
             if cmd_func:

@@ -13,3 +13,5 @@ htmlcov
 # pycharm
 .idea
 .bak
+env3
+tf

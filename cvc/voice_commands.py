@@ -11,6 +11,8 @@ from threading import Timer
 import cozmo
 from cozmo.util import distance_mm, speed_mmps, degrees
 from termcolor import colored, cprint
+# for Cozmo-What-Is-This
+from subprocess import Popen, PIPE
 
 speed = 80
 words_to_numbers = ['one', 'uno', 'i', 'un']
@@ -169,6 +171,37 @@ class VoiceCommands():
             message = "no picture saved"
         robot.camera.image_stream_enabled = False
         return message
+
+#####what_is_this#####
+
+    def recognize_img(self,path_to_img):
+        # pip install tensorflow
+        # cd cozmo_whatIsThis then  clone https://github.com/tensorflow/models
+        # python classify_image.py  --model_dir tf/imagenset/ --image_file /tmp/o_100.jpg
+        cmd = 'python classify_image.py --model_dir tf/imagenset/ --image_file ' + path_to_img
+        p = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
+        stdout, stderr = p.communicate()
+        result = stdout.decode("utf-8").split(",")[0]
+        return result
+
+    def what_is_this(self, robot:cozmo.robot.Robot = None, cmd_args = None):
+
+            robot.camera.image_stream_enabled = True
+            #  todo : surprise
+            print("taking a picture...")
+            pic_filename = "cozmo_pic_" + "now" + ".png"
+            robot.say_text("I'm thinking!").wait_for_completed()
+            latest_image = robot.world.latest_image
+            if latest_image:
+                latest_image.raw_image.convert('L').save(pic_filename)
+                print ("picture saved as: " + pic_filename)
+                recognize_out = self.recognize_img(pic_filename)
+                print(recognize_out)
+                robot.say_text("oh it is the {}".format(recognize_out)).wait_for_completed()
+            else:
+                print ("no picture saved")
+            robot.camera.image_stream_enabled = False
+            return
 
 ###### DRIVE ######
 

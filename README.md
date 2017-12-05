@@ -1,7 +1,7 @@
-# Cozmo what is this
+# [Cozmo what is this](https://github.com/wwj718/Cozmo-What-Is-This)
 fork from [rizal72/Cozmo-Voice-Commands](https://github.com/rizal72/Cozmo-Voice-Commands)
 
-### About Cozmo-What-Is-This
+### About [Cozmo-What-Is-This](https://github.com/wwj718/Cozmo-What-Is-This)
 *  Add a new command to [Cozmo-Voice-Commands](https://github.com/rizal72/Cozmo-Voice-Commands): `Cozmo, what is this`, then cozmo will tell you what it saw
 *  Add new language: Chinese
 

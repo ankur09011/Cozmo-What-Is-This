@@ -161,7 +161,7 @@ def run_inference_on_image(image):
     node_lookup = NodeLookup()
 
     top_k = predictions.argsort()[-FLAGS.num_top_predictions:][::-1]
-    top_k = [:1]
+    top_k = top_k[:1]
     for node_id in top_k:
       human_string = node_lookup.id_to_string(node_id)
       score = predictions[node_id]

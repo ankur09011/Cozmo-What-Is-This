@@ -106,7 +106,7 @@ def load_jsons():
         print("Package Location: " + package_location + "\nRelative location: " + relative_location)
 
     for file in glob.glob(absolute_location):
-        with open(file) as json_file:
+        with open(file,encoding='utf8') as json_file:
             languages.append(json.load(json_file))
             if (log):
                 cprint("loaded: " + str(file) + " ", "yellow")
